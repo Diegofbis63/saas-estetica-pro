@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { Card } from "@/components/ui/Card";
 import {
     Users,
@@ -13,9 +14,9 @@ import { Button } from "@/components/ui/Button";
 
 export default function DashboardPage() {
     const stats = [
-        { name: 'Citas de Hoy', value: '8', icon: CalendarIcon, color: 'text-mint' },
-        { name: 'Ingresos del Mes', value: '$124.500', icon: TrendingUp, color: 'text-mint' },
-        { name: 'Nuevos Clientes', value: '12', icon: Users, color: 'text-mint' },
+        { name: 'Citas de Hoy', value: '8', icon: CalendarIcon, color: 'text-mint', href: '/dashboard/citas' },
+        { name: 'Ingresos del Mes', value: '$124.500', icon: TrendingUp, color: 'text-mint', href: '/dashboard' },
+        { name: 'Nuevos Clientes', value: '12', icon: Users, color: 'text-mint', href: '/dashboard/clientes' },
     ];
 
     const upcomingAppointments = [
@@ -32,30 +33,34 @@ export default function DashboardPage() {
                     <h1 className="text-4xl font-black tracking-tight mb-2">Resumen General</h1>
                     <p className="text-white/40 font-medium">Gestioná tu estética con precisión quirúrgica.</p>
                 </div>
-                <Button className="h-fit">
-                    <Plus className="w-5 h-5" />
-                    Nueva Cita
-                </Button>
+                <Link href="/dashboard/citas">
+                    <Button className="h-fit">
+                        <Plus className="w-5 h-5 mr-2" />
+                        Nueva Cita
+                    </Button>
+                </Link>
             </div>
 
             {/* Stats Grid */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 {stats.map((stat) => (
-                    <Card key={stat.name} className="relative overflow-hidden group">
-                        <div className="flex items-start justify-between">
-                            <div>
-                                <p className="text-white/40 text-xs font-black uppercase tracking-widest mb-4">{stat.name}</p>
-                                <p className="text-4xl font-black tracking-tighter">{stat.value}</p>
+                    <Link href={stat.href} key={stat.name} className="block w-full">
+                        <Card className="relative overflow-hidden group h-full transition-colors hover:bg-white/[0.05]">
+                            <div className="flex items-start justify-between">
+                                <div>
+                                    <p className="text-white/40 text-xs font-black uppercase tracking-widest mb-4">{stat.name}</p>
+                                    <p className="text-4xl font-black tracking-tighter">{stat.value}</p>
+                                </div>
+                                <div className="p-3 rounded-xl bg-mint/5 border border-mint/10 group-hover:scale-110 transition-transform duration-500">
+                                    <stat.icon className="w-6 h-6 text-mint" />
+                                </div>
                             </div>
-                            <div className="p-3 rounded-xl bg-mint/5 border border-mint/10 group-hover:scale-110 transition-transform duration-500">
-                                <stat.icon className="w-6 h-6 text-mint" />
+                            <div className="mt-6 flex items-center gap-2 text-xs font-bold text-mint/60">
+                                <ArrowUpRight className="w-4 h-4" />
+                                <span>+12.5% respecto al mes pasado</span>
                             </div>
-                        </div>
-                        <div className="mt-6 flex items-center gap-2 text-xs font-bold text-mint/60">
-                            <ArrowUpRight className="w-4 h-4" />
-                            <span>+12.5% respecto al mes pasado</span>
-                        </div>
-                    </Card>
+                        </Card>
+                    </Link>
                 ))}
             </div>
 
@@ -105,8 +110,20 @@ export default function DashboardPage() {
                             </p>
                         </div>
                         <div className="grid grid-cols-2 gap-4">
-                            <Button variant="secondary" className="w-full">Manual Pro</Button>
-                            <Button variant="secondary" className="w-full">Soporte</Button>
+                            <Button
+                                variant="secondary"
+                                className="w-full"
+                                onClick={() => window.open('https://github.com/diegofbis63', '_blank')}
+                            >
+                                Manual Pro
+                            </Button>
+                            <Button
+                                variant="secondary"
+                                className="w-full"
+                                onClick={() => window.location.href = 'mailto:soporte@esteticapro.com'}
+                            >
+                                Soporte
+                            </Button>
                         </div>
                     </div>
                     {/* Subtle background decoration */}
@@ -116,6 +133,3 @@ export default function DashboardPage() {
         </div>
     );
 }
-
-// Helper Link for the component
-import Link from "next/link";

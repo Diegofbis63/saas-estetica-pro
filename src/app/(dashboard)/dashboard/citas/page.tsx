@@ -33,6 +33,19 @@ export default function CitasPage() {
         setLoading(false);
     }
 
+    const updateStatus = async (id: number, newStatus: string) => {
+        const { error } = await supabase
+            .from('citas')
+            .update({ estado: newStatus })
+            .eq('id', id);
+
+        if (!error) {
+            fetchCitas();
+        } else {
+            console.error("Error updating status:", error);
+        }
+    };
+
     const getStatusColor = (status: string) => {
         switch (status) {
             case 'completado': return 'text-mint bg-mint/10 border-mint/20';
@@ -109,10 +122,18 @@ export default function CitasPage() {
                                     {cita.estado}
                                 </span>
                                 <div className="flex items-center gap-2">
-                                    <button className="p-2 rounded-xl hover:bg-mint/10 text-white/20 hover:text-mint transition-all">
+                                    <button
+                                        onClick={() => updateStatus(cita.id, 'completado')}
+                                        className="p-2 rounded-xl hover:bg-mint/10 text-white/20 hover:text-mint transition-all"
+                                        title="Marcar como completada"
+                                    >
                                         <CheckCircle2 className="w-5 h-5" />
                                     </button>
-                                    <button className="p-2 rounded-xl hover:bg-red-500/10 text-white/20 hover:text-red-400 transition-all">
+                                    <button
+                                        onClick={() => updateStatus(cita.id, 'cancelado')}
+                                        className="p-2 rounded-xl hover:bg-red-500/10 text-white/20 hover:text-red-400 transition-all"
+                                        title="Cancelar cita"
+                                    >
                                         <XCircle className="w-5 h-5" />
                                     </button>
                                 </div>

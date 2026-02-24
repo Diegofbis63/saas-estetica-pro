@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { signOut } from "next-auth/react";
 
 const navigation = [
     { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
@@ -85,7 +86,10 @@ export function Sidebar() {
 
                 {/* Footer & Toggle */}
                 <div className="space-y-4 pt-4 border-t border-white/5">
-                    <button className="flex items-center gap-4 p-3 rounded-xl w-full text-white/50 hover:text-white hover:bg-white/5 transition-all">
+                    <button
+                        onClick={() => signOut({ callbackUrl: '/' })}
+                        className="flex items-center gap-4 p-3 rounded-xl w-full text-white/50 hover:text-white hover:bg-white/5 transition-all"
+                    >
                         <LogOut className="w-6 h-6" />
                         <span className={cn(
                             "font-semibold text-sm transition-all duration-500",

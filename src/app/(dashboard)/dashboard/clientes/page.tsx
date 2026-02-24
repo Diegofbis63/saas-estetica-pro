@@ -4,13 +4,14 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
-import { Plus, Search, MoreHorizontal, User } from "lucide-react";
+import { Plus, Search, Trash2, Edit2, User } from "lucide-react";
 import { ClientForm } from "@/components/ClientForm";
 
 export default function ClientesPage() {
     const [clientes, setClientes] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
     const [showForm, setShowForm] = useState(false);
+    const [searchTerm, setSearchTerm] = useState("");
 
     useEffect(() => {
         fetchClientes();
@@ -26,6 +27,27 @@ export default function ClientesPage() {
         if (data) setClientes(data);
         setLoading(false);
     }
+
+    const deleteCliente = async (id: number) => {
+        if (!confirm("¿Estás seguro de que deseas eliminar este cliente?")) return;
+
+        const { error } = await supabase
+            .from('clientes')
+            .delete()
+            .eq('id', id);
+
+        if (!error) {
+            fetchClientes();
+        } else {
+            console.error("Error deleting cliente:", error);
+            alert("No se puede eliminar el cliente porque tiene citas asociadas.");
+        }
+    };
+
+    const filteredClientes = clientes.filter(c =>
+        c.nombre.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        c.telefono.includes(searchTerm)
+    );
 
     return (
         <div className="space-y-8">
@@ -57,7 +79,9 @@ export default function ClientesPage() {
                         <input
                             type="text"
                             placeholder="Buscar cliente por nombre o teléfono..."
-                            className="w-full bg-white/5 border border-white/10 rounded-xl py-2 pl-10 pr-4 text-sm focus:outline-none focus:border-mint/50 transition-all"
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                            className="w-full bg-white/5 border border-white/10 rounded-xl py-2 pl-10 pr-4 text-sm focus:outline-none focus:border-mint/50 transition-all text-white"
                         />
                     </div>
                 </div>
@@ -80,15 +104,15 @@ export default function ClientesPage() {
                                         <td colSpan={5} className="px-6 py-8 bg-white/[0.01]" />
                                     </tr>
                                 ))
-                            ) : clientes.length === 0 ? (
+                            ) : filteredClientes.length === 0 ? (
                                 <tr>
                                     <td colSpan={5} className="px-6 py-20 text-center">
                                         <User className="w-12 h-12 text-white/5 mx-auto mb-4" />
-                                        <p className="text-white/20 font-bold">No hay clientes registrados aún.</p>
+                                        <p className="text-white/20 font-bold">No se encontraron clientes.</p>
                                     </td>
                                 </tr>
                             ) : (
-                                clientes.map((cliente) => (
+                                filteredClientes.map((cliente) => (
                                     <tr key={cliente.id} className="group hover:bg-white/[0.02] transition-colors">
                                         <td className="px-6 py-4">
                                             <div className="flex items-center gap-3">
@@ -102,9 +126,22 @@ export default function ClientesPage() {
                                         <td className="px-6 py-4 text-sm text-white/60">{cliente.email || '-'}</td>
                                         <td className="px-6 py-4 text-sm text-white/40">Sin registros</td>
                                         <td className="px-6 py-4">
-                                            <button className="p-2 rounded-lg hover:bg-white/5 transition-colors">
-                                                <MoreHorizontal className="w-5 h-5 text-white/20" />
-                                            </button>
+                                            <div className="flex items-center gap-2">
+                                                <button
+                                                    onClick={() => alert("Funcionalidad de edición en desarrollo")}
+                                                    className="p-2 rounded-lg hover:bg-mint/10 text-white/20 hover:text-mint transition-colors"
+                                                    title="Editar cliente"
+                                                >
+                                                    <Edit2 className="w-4 h-4" />
+                                                </button>
+                                                <button
+                                                    onClick={() => deleteCliente(cliente.id)}
+                                                    className="p-2 rounded-lg hover:bg-red-500/10 text-white/20 hover:text-red-400 transition-colors"
+                                                    title="Eliminar cliente"
+                                                >
+                                                    <Trash2 className="w-4 h-4" />
+                                                </button>
+                                            </div>
                                         </td>
                                     </tr>
                                 ))

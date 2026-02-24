@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
-import { Plus, Search, Scissors, MoreHorizontal } from "lucide-react";
+import { Plus, Search, Scissors, Trash2, Edit2 } from "lucide-react";
 import { ServiceForm } from "@/components/ServiceForm";
 
 export default function ServiciosPage() {
@@ -26,6 +26,22 @@ export default function ServiciosPage() {
         if (data) setServicios(data);
         setLoading(false);
     }
+
+    const deleteServicio = async (id: number) => {
+        if (!confirm("¿Estás seguro de que deseas eliminar este servicio?")) return;
+
+        const { error } = await supabase
+            .from('servicios')
+            .delete()
+            .eq('id', id);
+
+        if (!error) {
+            fetchServicios();
+        } else {
+            console.error("Error deleting servicio:", error);
+            alert("No se puede eliminar el servicio porque tiene citas asociadas.");
+        }
+    };
 
     return (
         <div className="space-y-8">
@@ -65,9 +81,22 @@ export default function ServiciosPage() {
                                 <div className="p-3 rounded-xl bg-mint/5 border border-mint/10">
                                     <Scissors className="w-5 h-5 text-mint" />
                                 </div>
-                                <button className="p-1 rounded hover:bg-white/5 transition-colors">
-                                    <MoreHorizontal className="w-4 h-4 text-white/20" />
-                                </button>
+                                <div className="flex items-center gap-1">
+                                    <button
+                                        onClick={() => alert("Funcionalidad de edición en desarrollo")}
+                                        className="p-1.5 rounded-lg hover:bg-mint/10 text-white/20 hover:text-mint transition-colors"
+                                        title="Editar servicio"
+                                    >
+                                        <Edit2 className="w-4 h-4" />
+                                    </button>
+                                    <button
+                                        onClick={() => deleteServicio(servicio.id)}
+                                        className="p-1.5 rounded-lg hover:bg-red-500/10 text-white/20 hover:text-red-400 transition-colors"
+                                        title="Eliminar servicio"
+                                    >
+                                        <Trash2 className="w-4 h-4" />
+                                    </button>
+                                </div>
                             </div>
                             <h3 className="text-lg font-black tracking-tight mb-1">{servicio.nombre_servicio}</h3>
                             <div className="flex items-center justify-between mt-6">
