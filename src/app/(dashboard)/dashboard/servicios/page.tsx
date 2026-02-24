@@ -11,6 +11,7 @@ export default function ServiciosPage() {
     const [servicios, setServicios] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
     const [showForm, setShowForm] = useState(false);
+    const [editingServicio, setEditingServicio] = useState<any | null>(null);
 
     useEffect(() => {
         fetchServicios();
@@ -50,7 +51,7 @@ export default function ServiciosPage() {
                     <h1 className="text-3xl font-black tracking-tight">Servicios</h1>
                     <p className="text-white/40">Gestioná tu catálogo de tratamientos.</p>
                 </div>
-                <Button onClick={() => setShowForm(true)}>
+                <Button onClick={() => { setEditingServicio(null); setShowForm(true); }}>
                     <Plus className="w-5 h-5" />
                     Nuevo Servicio
                 </Button>
@@ -58,10 +59,15 @@ export default function ServiciosPage() {
 
             {showForm && (
                 <ServiceForm
-                    onClose={() => setShowForm(false)}
+                    initialData={editingServicio}
+                    onClose={() => {
+                        setShowForm(false);
+                        setEditingServicio(null);
+                    }}
                     onSuccess={() => {
                         fetchServicios();
                         setShowForm(false);
+                        setEditingServicio(null);
                     }}
                 />
             )}
@@ -83,7 +89,10 @@ export default function ServiciosPage() {
                                 </div>
                                 <div className="flex items-center gap-1">
                                     <button
-                                        onClick={() => alert("Funcionalidad de edición en desarrollo")}
+                                        onClick={() => {
+                                            setEditingServicio(servicio);
+                                            setShowForm(true);
+                                        }}
                                         className="p-1.5 rounded-lg hover:bg-mint/10 text-white/20 hover:text-mint transition-colors"
                                         title="Editar servicio"
                                     >

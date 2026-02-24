@@ -9,14 +9,15 @@ import { X, Scissors, DollarSign, Clock, Save } from "lucide-react";
 interface ServiceFormProps {
     onClose: () => void;
     onSuccess: () => void;
+    initialData?: any;
 }
 
-export function ServiceForm({ onClose, onSuccess }: ServiceFormProps) {
+export function ServiceForm({ onClose, onSuccess, initialData }: ServiceFormProps) {
     const [loading, setLoading] = useState(false);
     const [formData, setFormData] = useState({
-        nombre_servicio: "",
-        precio: "",
-        duracion_minutos: "30"
+        nombre_servicio: initialData?.nombre_servicio || "",
+        precio: initialData?.precio?.toString() || "",
+        duracion_minutos: initialData?.duracion_minutos?.toString() || "30"
     });
     const [error, setError] = useState<string | null>(null);
 
@@ -25,13 +26,26 @@ export function ServiceForm({ onClose, onSuccess }: ServiceFormProps) {
         setLoading(true);
         setError(null);
 
-        const { error: supabaseError } = await supabase
-            .from('servicios')
-            .insert([{
-                nombre_servicio: formData.nombre_servicio,
-                precio: parseFloat(formData.precio),
-                duracion_minutos: parseInt(formData.duracion_minutos)
-            }]);
+        const payload = {
+            nombre_servicio: formData.nombre_servicio,
+            precio: parseFloat(formData.precio),
+            duracion_minutos: parseInt(formData.duracion_minutos)
+        };
+
+        let supabaseError;
+
+        if (initialData) {
+            const { error: err } = await supabase
+                .from('servicios')
+                .update(payload)
+                .eq('id', initialData.id);
+            supabaseError = err;
+        } else {
+            const { error: err } = await supabase
+                .from('servicios')
+                .insert([payload]);
+            supabaseError = err;
+        }
 
         if (supabaseError) {
             setError(supabaseError.message);
@@ -48,7 +62,7 @@ export function ServiceForm({ onClose, onSuccess }: ServiceFormProps) {
 
             <Card className="relative w-full max-w-xl p-0 overflow-hidden shadow-2xl border-mint/20 animate-in fade-in zoom-in duration-300">
                 <div className="p-6 border-b border-white/5 flex items-center justify-between bg-white/[0.01]">
-                    <h2 className="text-xl font-black tracking-tight">Nuevo Servicio</h2>
+                    <h2 className="text-xl font-black tracking-tight">{initialData ? "Editar Servicio" : "Nuevo Servicio"}</h2>
                     <button onClick={onClose} className="p-2 rounded-xl hover:bg-white/5 text-white/40 hover:text-white transition-all">
                         <X className="w-5 h-5" />
                     </button>

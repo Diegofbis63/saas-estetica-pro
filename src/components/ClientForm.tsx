@@ -9,15 +9,16 @@ import { X, User, Phone, Mail, Save } from "lucide-react";
 interface ClientFormProps {
     onClose: () => void;
     onSuccess: () => void;
+    initialData?: any;
 }
 
-export function ClientForm({ onClose, onSuccess }: ClientFormProps) {
+export function ClientForm({ onClose, onSuccess, initialData }: ClientFormProps) {
     const [loading, setLoading] = useState(false);
     const [formData, setFormData] = useState({
-        nombre: "",
-        telefono: "",
-        email: "",
-        notas_medicas: ""
+        nombre: initialData?.nombre || "",
+        telefono: initialData?.telefono || "",
+        email: initialData?.email || "",
+        notas_medicas: initialData?.notas_medicas || ""
     });
     const [error, setError] = useState<string | null>(null);
 
@@ -32,9 +33,20 @@ export function ClientForm({ onClose, onSuccess }: ClientFormProps) {
             return;
         }
 
-        const { error: supabaseError } = await supabase
-            .from('clientes')
-            .insert([formData]);
+        let supabaseError;
+
+        if (initialData) {
+            const { error: err } = await supabase
+                .from('clientes')
+                .update(formData)
+                .eq('id', initialData.id);
+            supabaseError = err;
+        } else {
+            const { error: err } = await supabase
+                .from('clientes')
+                .insert([formData]);
+            supabaseError = err;
+        }
 
         if (supabaseError) {
             setError(supabaseError.message);
@@ -51,7 +63,7 @@ export function ClientForm({ onClose, onSuccess }: ClientFormProps) {
 
             <Card className="relative w-full max-w-xl p-0 overflow-hidden shadow-2xl border-mint/20 animate-in fade-in zoom-in duration-300">
                 <div className="p-6 border-b border-white/5 flex items-center justify-between bg-white/[0.01]">
-                    <h2 className="text-xl font-black tracking-tight">Nuevo Cliente</h2>
+                    <h2 className="text-xl font-black tracking-tight">{initialData ? "Editar Cliente" : "Nuevo Cliente"}</h2>
                     <button onClick={onClose} className="p-2 rounded-xl hover:bg-white/5 text-white/40 hover:text-white transition-all">
                         <X className="w-5 h-5" />
                     </button>

@@ -11,6 +11,7 @@ export default function ClientesPage() {
     const [clientes, setClientes] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
     const [showForm, setShowForm] = useState(false);
+    const [editingCliente, setEditingCliente] = useState<any | null>(null);
     const [searchTerm, setSearchTerm] = useState("");
 
     useEffect(() => {
@@ -56,7 +57,7 @@ export default function ClientesPage() {
                     <h1 className="text-3xl font-black tracking-tight">Clientes</h1>
                     <p className="text-white/40">Gestioná tu base de datos de pacientes.</p>
                 </div>
-                <Button onClick={() => setShowForm(true)}>
+                <Button onClick={() => { setEditingCliente(null); setShowForm(true); }}>
                     <Plus className="w-5 h-5" />
                     Nuevo Cliente
                 </Button>
@@ -64,10 +65,15 @@ export default function ClientesPage() {
 
             {showForm && (
                 <ClientForm
-                    onClose={() => setShowForm(false)}
+                    initialData={editingCliente}
+                    onClose={() => {
+                        setShowForm(false);
+                        setEditingCliente(null);
+                    }}
                     onSuccess={() => {
                         fetchClientes();
                         setShowForm(false);
+                        setEditingCliente(null);
                     }}
                 />
             )}
@@ -128,7 +134,10 @@ export default function ClientesPage() {
                                         <td className="px-6 py-4">
                                             <div className="flex items-center gap-2">
                                                 <button
-                                                    onClick={() => alert("Funcionalidad de edición en desarrollo")}
+                                                    onClick={() => {
+                                                        setEditingCliente(cliente);
+                                                        setShowForm(true);
+                                                    }}
                                                     className="p-2 rounded-lg hover:bg-mint/10 text-white/20 hover:text-mint transition-colors"
                                                     title="Editar cliente"
                                                 >
