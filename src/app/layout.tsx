@@ -13,8 +13,19 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "SaaS Estética Pro | Gestión de Lujo",
-  description: "Plataforma de gestión profesional para clínicas estéticas y spas.",
+  title: {
+    default: "SaaS Estética Pro | Gestión de Lujo",
+    template: "%s | Estética Pro"
+  },
+  description: "Plataforma premium de gestión para clínicas estéticas, spas y centros de belleza. Optimiza tu agenda con lujo y precisión.",
+  keywords: ["estética", "gestión", "saas", "belleza", "lux", "agenda", "spa"],
+  authors: [{ name: "Estética Pro Team" }],
+  creator: "Estética Pro",
+  themeColor: "#0a0a0a",
+  viewport: "width=device-width, initial-scale=1",
+  icons: {
+    icon: "/favicon.ico",
+  },
 };
 
 import { Providers } from "@/components/Providers";
