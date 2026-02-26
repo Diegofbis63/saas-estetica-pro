@@ -23,9 +23,6 @@ export const metadata: Metadata = {
   creator: "Estética Pro",
   themeColor: "#0a0a0a",
   viewport: "width=device-width, initial-scale=1",
-  icons: {
-    icon: "/favicon.ico",
-  },
 };
 
 import { Providers } from "@/components/Providers";
