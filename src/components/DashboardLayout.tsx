@@ -4,6 +4,7 @@ import { Sidebar } from "@/components/Sidebar";
 import { useUIStore } from "@/lib/store";
 import { cn } from "@/lib/utils";
 import { ReactNode } from "react";
+import { FloatingChat } from "@/components/FloatingChat";
 
 interface DashboardLayoutProps {
     children: ReactNode;
@@ -25,6 +26,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
                     {children}
                 </div>
             </main>
+            <FloatingChat />
         </div>
     );
 }

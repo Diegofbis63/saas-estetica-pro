@@ -10,14 +10,15 @@ import {
     Scissors,
     Menu,
     ChevronLeft,
-    LogOut
+    LogOut,
+    TrendingUp
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { signOut } from "next-auth/react";
-
 const navigation = [
     { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
+    { name: 'Ingresos', href: '/dashboard/ingresos', icon: TrendingUp },
     { name: 'Citas', href: '/dashboard/citas', icon: Calendar },
     { name: 'Clientes', href: '/dashboard/clientes', icon: Users },
     { name: 'Servicios', href: '/dashboard/servicios', icon: Scissors },

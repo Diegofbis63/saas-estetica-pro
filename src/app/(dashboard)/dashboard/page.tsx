@@ -14,8 +14,7 @@ import { Button } from "@/components/ui/Button";
 
 export default function DashboardPage() {
     const stats = [
-        { name: 'Citas de Hoy', value: '8', icon: CalendarIcon, color: 'text-mint', href: '/dashboard/citas' },
-        { name: 'Ingresos del Mes', value: '$124.500', icon: TrendingUp, color: 'text-mint', href: '/dashboard' },
+        { name: 'Ingresos del Mes', value: '$124.500', icon: TrendingUp, color: 'text-mint', href: '/dashboard/ingresos' },
         { name: 'Nuevos Clientes', value: '12', icon: Users, color: 'text-mint', href: '/dashboard/clientes' },
     ];
 
