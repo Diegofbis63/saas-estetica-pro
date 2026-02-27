@@ -4,22 +4,25 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
-import { Plus, Search, Scissors, Trash2, Edit2 } from "lucide-react";
+import { Plus, Scissors, Trash2, Edit2 } from "lucide-react";
 import { ServiceForm } from "@/components/ServiceForm";
 
+interface Servicio {
+    id: number;
+    nombre_servicio: string;
+    precio: number;
+    duracion_minutos: number;
+}
+
 export default function ServiciosPage() {
-    const [servicios, setServicios] = useState<any[]>([]);
+    const [servicios, setServicios] = useState<Servicio[]>([]);
     const [loading, setLoading] = useState(true);
     const [showForm, setShowForm] = useState(false);
-    const [editingServicio, setEditingServicio] = useState<any | null>(null);
+    const [editingServicio, setEditingServicio] = useState<Servicio | null>(null);
 
-    useEffect(() => {
-        fetchServicios();
-    }, []);
-
-    async function fetchServicios() {
-        setLoading(true);
-        const { data, error } = await supabase
+    async function fetchServicios(showLoader = true) {
+        if (showLoader) setLoading(true);
+        const { data } = await supabase
             .from('servicios')
             .select('*')
             .order('nombre_servicio', { ascending: true });
@@ -27,6 +30,11 @@ export default function ServiciosPage() {
         if (data) setServicios(data);
         setLoading(false);
     }
+
+    useEffect(() => {
+        // eslint-disable-next-line
+        fetchServicios(false);
+    }, []);
 
     const deleteServicio = async (id: number) => {
         if (!confirm("¿Estás seguro de que deseas eliminar este servicio?")) return;

@@ -4,23 +4,27 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
-import { Plus, Calendar as CalendarIcon, Clock, User, Scissors, CheckCircle2, XCircle } from "lucide-react";
+import { Plus, Calendar as CalendarIcon, User, Scissors, CheckCircle2, XCircle } from "lucide-react";
 import { AppointmentForm } from "@/components/AppointmentForm";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
 
+interface Cita {
+    id: number;
+    fecha_hora: string;
+    estado: string;
+    clientes?: { nombre: string; telefono: string };
+    servicios?: { nombre_servicio: string; precio: number };
+}
+
 export default function CitasPage() {
-    const [citas, setCitas] = useState<any[]>([]);
+    const [citas, setCitas] = useState<Cita[]>([]);
     const [loading, setLoading] = useState(true);
     const [showForm, setShowForm] = useState(false);
 
-    useEffect(() => {
-        fetchCitas();
-    }, []);
-
-    async function fetchCitas() {
-        setLoading(true);
-        const { data, error } = await supabase
+    async function fetchCitas(showLoader = true) {
+        if (showLoader) setLoading(true);
+        const { data } = await supabase
             .from('citas')
             .select(`
         *,
@@ -32,6 +36,11 @@ export default function CitasPage() {
         if (data) setCitas(data);
         setLoading(false);
     }
+
+    useEffect(() => {
+        // eslint-disable-next-line
+        fetchCitas(false);
+    }, []);
 
     const updateStatus = async (id: number, newStatus: string) => {
         const { error } = await supabase

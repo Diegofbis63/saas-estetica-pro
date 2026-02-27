@@ -7,20 +7,24 @@ import { Button } from "@/components/ui/Button";
 import { Plus, Search, Trash2, Edit2, User } from "lucide-react";
 import { ClientForm } from "@/components/ClientForm";
 
+interface Cliente {
+    id: number;
+    nombre: string;
+    telefono: string;
+    email: string;
+    notas_medicas: string;
+}
+
 export default function ClientesPage() {
-    const [clientes, setClientes] = useState<any[]>([]);
+    const [clientes, setClientes] = useState<Cliente[]>([]);
     const [loading, setLoading] = useState(true);
     const [showForm, setShowForm] = useState(false);
-    const [editingCliente, setEditingCliente] = useState<any | null>(null);
+    const [editingCliente, setEditingCliente] = useState<Cliente | null>(null);
     const [searchTerm, setSearchTerm] = useState("");
 
-    useEffect(() => {
-        fetchClientes();
-    }, []);
-
-    async function fetchClientes() {
-        setLoading(true);
-        const { data, error } = await supabase
+    async function fetchClientes(showLoader = true) {
+        if (showLoader) setLoading(true);
+        const { data } = await supabase
             .from('clientes')
             .select('*')
             .order('nombre', { ascending: true });
@@ -28,6 +32,11 @@ export default function ClientesPage() {
         if (data) setClientes(data);
         setLoading(false);
     }
+
+    useEffect(() => {
+        // eslint-disable-next-line
+        fetchClientes(false);
+    }, []);
 
     const deleteCliente = async (id: number) => {
         if (!confirm("¿Estás seguro de que deseas eliminar este cliente?")) return;

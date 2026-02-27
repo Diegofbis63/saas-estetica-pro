@@ -1,31 +1,54 @@
-"use client";
-
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import Link from "next/link";
 import { Card } from "@/components/ui/Card";
 import {
     Users,
     TrendingUp,
-    Calendar as CalendarIcon,
     Plus,
     ArrowUpRight,
     Clock
 } from "lucide-react";
 import { Button } from "@/components/ui/Button";
+import { supabase } from "@/lib/supabase";
 
-export default function DashboardPage() {
+export const dynamic = 'force-dynamic';
+
+export default async function DashboardPage() {
+    // Buscar citas más recientes (futuras si es posible, o las últimas agregadas)
+    const { data: appos } = await supabase
+        .from('appointments')
+        .select(`
+            id, 
+            date, 
+            status,
+            clients (name),
+            services (name)
+        `)
+        .order('date', { ascending: false })
+        .limit(3);
+
+    const upcomingAppointments = (appos as any[])?.map((appo: any) => ({
+        id: appo.id,
+        name: (Array.isArray(appo.clients) ? appo.clients[0] : appo.clients)?.name || 'Cliente Genérico',
+        service: (Array.isArray(appo.services) ? appo.services[0] : appo.services)?.name || 'Servicio General',
+        time: new Date(appo.date).toLocaleDateString('es-AR', { hour: '2-digit', minute: '2-digit' }),
+        status: appo.status
+    })) || [];
+
+    // Calcular stats rápidos (Simplificado para el demo - todos los clientes e ingresos)
+    const { count: clientsCount } = await supabase.from('clients').select('*', { count: 'exact', head: true });
+
+    // Obtenemos ingresos totales sumando total_price
+    const { data: allAppos } = await supabase.from('appointments').select('total_price');
+    const totalRev = allAppos?.reduce((acc, curr) => acc + (curr.total_price || 0), 0) || 0;
+
     const stats = [
-        { name: 'Ingresos del Mes', value: '$124.500', icon: TrendingUp, color: 'text-mint', href: '/dashboard/ingresos' },
-        { name: 'Nuevos Clientes', value: '12', icon: Users, color: 'text-mint', href: '/dashboard/clientes' },
-    ];
-
-    const upcomingAppointments = [
-        { id: 1, name: 'Martina Rodríguez', service: 'Limpieza Facial Profunda', time: '14:30', status: 'confirmada' },
-        { id: 2, name: 'Julián Sosa', service: 'Dermapen + Vitaminas', time: '16:00', status: 'pendiente' },
-        { id: 3, name: 'Sofía Benítez', service: 'Peeling Químico', time: '17:30', status: 'confirmada' },
+        { name: 'Ingresos Totales', value: `$${totalRev.toLocaleString('es-AR')}`, icon: TrendingUp, color: 'text-mint', href: '/dashboard/ingresos' },
+        { name: 'Clientes Registrados', value: clientsCount?.toString() || '0', icon: Users, color: 'text-mint', href: '/dashboard/clientes' },
     ];
 
     return (
-        <div className="space-y-10">
+        <div className="space-y-10 animate-fade-in">
             {/* Header */}
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
                 <div>
@@ -41,7 +64,7 @@ export default function DashboardPage() {
             </div>
 
             {/* Stats Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {stats.map((stat) => (
                     <Link href={stat.href} key={stat.name} className="block w-full">
                         <Card className="relative overflow-hidden group h-full transition-colors hover:bg-white/[0.05]">
@@ -56,7 +79,7 @@ export default function DashboardPage() {
                             </div>
                             <div className="mt-6 flex items-center gap-2 text-xs font-bold text-mint/60">
                                 <ArrowUpRight className="w-4 h-4" />
-                                <span>+12.5% respecto al mes pasado</span>
+                                <span>Datos actualizados en tiempo real</span>
                             </div>
                         </Card>
                     </Link>
@@ -67,35 +90,42 @@ export default function DashboardPage() {
                 {/* Upcoming Appointments */}
                 <Card className="flex flex-col h-full">
                     <div className="flex items-center justify-between mb-8">
-                        <h2 className="text-xl font-black tracking-tight">Próximos 3 Clientes</h2>
+                        <h2 className="text-xl font-black tracking-tight">Citas Recientes</h2>
                         <Link href="/dashboard/citas" className="text-xs font-black uppercase tracking-widest text-mint hover:underline">
-                            Ver todos
+                            Ver todas
                         </Link>
                     </div>
-                    <div className="space-y-4 flex-1">
-                        {upcomingAppointments.map((appo) => (
-                            <div key={appo.id} className="p-4 rounded-2xl bg-white/[0.02] border border-white/5 flex items-center justify-between group hover:bg-white/[0.04] transition-all">
-                                <div className="flex items-center gap-4">
-                                    <div className="w-12 h-12 rounded-xl bg-white/5 flex items-center justify-center font-bold text-lg border border-white/5">
-                                        {appo.name[0]}
+
+                    {upcomingAppointments.length === 0 ? (
+                        <div className="flex-1 flex items-center justify-center text-white/30 text-sm">
+                            No hay citas registradas aún.
+                        </div>
+                    ) : (
+                        <div className="space-y-4 flex-1">
+                            {upcomingAppointments.map((appo) => (
+                                <div key={appo.id} className="p-4 rounded-2xl bg-white/[0.02] border border-white/5 flex items-center justify-between group hover:bg-white/[0.04] transition-all">
+                                    <div className="flex items-center gap-4">
+                                        <div className="w-12 h-12 rounded-xl bg-white/5 flex items-center justify-center font-bold text-lg border border-white/5">
+                                            {appo.name[0]?.toUpperCase()}
+                                        </div>
+                                        <div>
+                                            <h3 className="font-bold text-sm">{appo.name}</h3>
+                                            <p className="text-white/40 text-xs truncate max-w-[150px]">{appo.service}</p>
+                                        </div>
                                     </div>
-                                    <div>
-                                        <h3 className="font-bold text-sm">{appo.name}</h3>
-                                        <p className="text-white/40 text-xs">{appo.service}</p>
+                                    <div className="text-right flex flex-col items-end gap-1">
+                                        <div className="flex items-center gap-1.5 text-mint font-black text-sm">
+                                            <Clock className="w-4 h-4" />
+                                            {appo.time}
+                                        </div>
+                                        <span className="text-[10px] font-black uppercase tracking-widest text-white/20">
+                                            {appo.status}
+                                        </span>
                                     </div>
                                 </div>
-                                <div className="text-right flex flex-col items-end gap-1">
-                                    <div className="flex items-center gap-1.5 text-mint font-black text-sm">
-                                        <Clock className="w-4 h-4" />
-                                        {appo.time}
-                                    </div>
-                                    <span className="text-[10px] font-black uppercase tracking-widest text-white/20">
-                                        {appo.status}
-                                    </span>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
+                            ))}
+                        </div>
+                    )}
                 </Card>
 
                 {/* Quick Actions / Integration Info */}

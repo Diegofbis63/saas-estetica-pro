@@ -5,6 +5,7 @@ import { Sparkles, X, Send, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { cn } from "@/lib/utils";
 import { AnimatePresence, motion } from "framer-motion";
+import { useRouter } from "next/navigation";
 
 type Message = {
     role: "user" | "model";
@@ -19,6 +20,7 @@ export function FloatingChat() {
     const [input, setInput] = useState("");
     const [isLoading, setIsLoading] = useState(false);
     const messagesEndRef = useRef<HTMLDivElement>(null);
+    const router = useRouter();
 
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -50,6 +52,10 @@ export function FloatingChat() {
 
             const data = await response.json();
             setMessages(prev => [...prev, { role: data.role, content: data.content }]);
+
+            if (data.refreshDashboard) {
+                router.refresh();
+            }
         } catch (error) {
             console.error("Chat error:", error);
             setMessages(prev => [...prev, { role: "model", content: "Lo siento, tuve un problema procesando tu solicitud. Por favor intenta de nuevo." }]);

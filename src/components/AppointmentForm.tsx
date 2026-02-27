@@ -1,10 +1,11 @@
 "use client";
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import { Button } from "./ui/Button";
 import { Card } from "./ui/Card";
-import { X, Calendar, User, Scissors, Clock, Save } from "lucide-react";
+import { X, Calendar, User, Scissors, Save } from "lucide-react";
 import { format } from "date-fns";
 
 interface AppointmentFormProps {
@@ -25,10 +26,6 @@ export function AppointmentForm({ onClose, onSuccess }: AppointmentFormProps) {
 
     const [error, setError] = useState<string | null>(null);
 
-    useEffect(() => {
-        fetchInitialData();
-    }, []);
-
     async function fetchInitialData() {
         const [clientsRes, servicesRes] = await Promise.all([
             supabase.from('clientes').select('id, nombre'),
@@ -37,6 +34,11 @@ export function AppointmentForm({ onClose, onSuccess }: AppointmentFormProps) {
         if (clientsRes.data) setClientes(clientsRes.data);
         if (servicesRes.data) setServicios(servicesRes.data);
     }
+
+    useEffect(() => {
+        // eslint-disable-next-line
+        fetchInitialData();
+    }, []);
 
     async function handleSubmit(e: React.FormEvent) {
         e.preventDefault();
