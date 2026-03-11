@@ -3,7 +3,7 @@ import { GoogleGenerativeAI, FunctionDeclaration, SchemaType } from '@google/gen
 import { NextResponse } from 'next/server';
 import { getFinancialSummary, mockAppointments } from '@/lib/data/mockFinances';
 import { seedDatabase } from '@/lib/data/seedDatabase';
-import { createClientDeclaration, scheduleAppointmentDeclaration, createClient, scheduleAppointment } from '@/lib/data/dbOperations';
+import { createClientDeclaration, scheduleAppointmentDeclaration, createServiceDeclaration, dbCreateClient, dbScheduleAppointment, dbCreateService } from '@/lib/data/dbOperations';
 
 // Initialize the Google Generative AI SDK with the provided API Key.
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '');
@@ -46,6 +46,7 @@ INSTRUCCIONES CRÍTICAS EJECUTIVAS:
 1. Tienes permiso y herramientas para intervenir la base de datos en tiempo real:
    - Usa 'create_client' cuando el usuario te pida registrar un nuevo cliente con datos específicos.
    - Usa 'schedule_appointment' cuando el usuario te pida agendar una cita para un cliente.
+   - Usa 'create_service' cuando el usuario te indique agregar un nuevo servicio/tratamiento a la estética con su precio (ej. "agregá Radiofrecuencia a 4000 pesos").
    - Usa 'execute_database_seeding' SOLO cuando el usuario te pida crear datos de prueba, clientes o citas de forma MASIVA (Ej: "crea 20 clientes y agenda 20 citas").
 2. Una vez ejecutada una herramienta y recibida la confirmación de la DB, notifica al usuario con un mensaje de éxito indicando que la base de datos y la interfaz gráfica han sido actualizadas.
 3. Si el usuario pregunta por ventas históricas, responde usando *únicamente* el contexto financiero adjunto.
@@ -63,82 +64,130 @@ CONTEXTO FINANCIERO ACTUAL DE LA CLÍNICA (Últimos 7 días):
             console.error("CRÍTICO: No se encontró GEMINI_API_KEY en las variables de entorno");
         }
 
-        const model = genAI.getGenerativeModel({
-            model: "models/gemini-2.5-flash",
-            systemInstruction: systemPrompt,
-            tools: [{
-                functionDeclarations: [
-                    executeDatabaseSeedingDeclaration,
-                    createClientDeclaration,
-                    scheduleAppointmentDeclaration
-                ],
-            }]
-        });
+        const modelsToTry = [
+            "gemini-2.0-flash",
+            "gemini-1.5-flash",
+            "gemini-1.5-pro",
+        ];
 
-        const formattedHistory = messages.slice(0, -1).map((msg: { role: string; content: string }) => ({
-            role: msg.role === 'user' ? 'user' : 'model',
-            parts: [{ text: msg.content }],
-        }));
-
-        while (formattedHistory.length > 0 && formattedHistory[0].role === 'model') {
-            formattedHistory.shift();
-        }
-
-        const chatSession = model.startChat({
-            history: formattedHistory,
-        });
-
-        const latestUserMessage = messages[messages.length - 1].content;
-        let result = await chatSession.sendMessage(latestUserMessage);
-        let response = await result.response;
-
+        let responseText = "";
         let refreshDashboard = false;
+        let success = false;
+        let lastError = null;
 
-        const calls = response.functionCalls();
-        if (calls && calls.length > 0) {
-            // Manejamos la primera llamada (o múltiples iterativamente)
-            for (const call of calls) {
-                let dbResult;
-                refreshDashboard = true; // Si hubo mutate en DB, refrescamos UI
+        for (const modelName of modelsToTry) {
+            if (success) break;
 
-                if (call.name === "execute_database_seeding") {
-                    const args: any = call.args;
-                    dbResult = await seedDatabase(
-                        args.clientsCount || 10,
-                        args.appointmentsCount || 20,
-                        args.servicesCount || 5
-                    );
-                } else if (call.name === "create_client") {
-                    const args: any = call.args;
-                    dbResult = await createClient(args.name, args.email || '', args.phone || '');
-                } else if (call.name === "schedule_appointment") {
-                    const args: any = call.args;
-                    dbResult = await scheduleAppointment(args.clientId, args.serviceName, args.dateIso);
+            try {
+                // console.log(`Intentando usar modelo Gemini: ${modelName}`);
+                const model = genAI.getGenerativeModel({
+                    model: modelName,
+                    systemInstruction: systemPrompt,
+                    tools: [{
+                        functionDeclarations: [
+                            executeDatabaseSeedingDeclaration,
+                            createClientDeclaration,
+                            scheduleAppointmentDeclaration,
+                            createServiceDeclaration
+                        ],
+                    }]
+                });
+
+                const formattedHistory = messages.slice(0, -1).map((msg: { role: string; content: string }) => ({
+                    role: msg.role === 'user' ? 'user' : 'model',
+                    parts: [{ text: msg.content }],
+                }));
+
+                while (formattedHistory.length > 0 && formattedHistory[0].role === 'model') {
+                    formattedHistory.shift();
                 }
 
-                if (dbResult) {
-                    // Reingresamos la confirmación de la DB al cerebro de Gemini
-                    result = await chatSession.sendMessage([{
-                        functionResponse: {
-                            name: call.name,
-                            response: dbResult
+                const chatSession = model.startChat({
+                    history: formattedHistory,
+                });
+
+                const latestUserMessage = messages[messages.length - 1].content;
+                let result = await chatSession.sendMessage(latestUserMessage);
+                let response = await result.response;
+
+                const calls = response.functionCalls();
+                if (calls && calls.length > 0) {
+                    for (const call of calls) {
+                        let dbResult;
+                        refreshDashboard = true; // Si hubo mutate en DB, refrescamos UI
+
+                        try {
+                            if (call.name === "execute_database_seeding") {
+                                const args: any = call.args || {};
+                                dbResult = await seedDatabase(
+                                    args.clientsCount || 10,
+                                    args.appointmentsCount || 20,
+                                    args.servicesCount || 5
+                                );
+                            } else if (call.name === "create_client") {
+                                const args: any = call.args || {};
+                                dbResult = await dbCreateClient(args.name, args.email || '', args.phone || '');
+                            } else if (call.name === "schedule_appointment") {
+                                const args: any = call.args || {};
+                                dbResult = await dbScheduleAppointment(args.clientId, args.serviceName, args.dateIso);
+                            } else if (call.name === "create_service") {
+                                const args: any = call.args || {};
+                                dbResult = await dbCreateService(args.name, args.price, args.duration || 60);
+                            }
+
+                            if (dbResult) {
+                                result = await chatSession.sendMessage([{
+                                    functionResponse: {
+                                        name: call.name,
+                                        response: dbResult
+                                    }
+                                }]);
+                                response = await result.response;
+                            }
+                        } catch (internalError: any) {
+                            console.error(`Error procesando function call ${call.name}:`, internalError);
+                            result = await chatSession.sendMessage([{
+                                functionResponse: {
+                                    name: call.name,
+                                    response: { error: `Internal execution error: ${internalError.message}` }
+                                }
+                            }]);
+                            response = await result.response;
                         }
-                    }]);
-                    response = await result.response;
+                    }
                 }
+
+                responseText = response.text();
+                // Fallback: si Gemini no generó texto final tras ejecutar tools, ponemos un mensaje genérico
+                if (!responseText) {
+                    responseText = refreshDashboard
+                        ? '✅ Operación completada. La base de datos ha sido actualizada y la interfaz se refrescará en breve.'
+                        : '✅ Solicitud procesada con éxito.';
+                }
+                success = true; // Marcamos éxito y salimos del bucle iterativo de modelos
+
+            } catch (modelError: any) {
+                console.warn(`[Fallback] Falló el modelo ${modelName}:`, modelError?.message || modelError);
+                lastError = modelError;
             }
         }
 
-        const text = response.text();
+        if (!success) {
+            throw new Error(`Todos los modelos Gemini fallaron. Último error: ${lastError?.message || 'Desconocido'}`);
+        }
+
         return NextResponse.json({
             role: 'model',
-            content: text,
+            content: responseText,
             refreshDashboard // Inyectado para que el Frontend sepa si debe recargar datos
         });
     } catch (error) {
         console.error('Error in Gemini Chat Endpoint:', error);
         return NextResponse.json(
-            { error: 'Error interno del servidor al procesar la respuesta de la IA.' },
+            {
+                error: 'Error interno del servidor al procesar la respuesta de la IA.',
+                details: error instanceof Error ? error.message : String(error)
+            },
             { status: 500 }
         );
     }

@@ -5,6 +5,7 @@ import { useUIStore } from "@/lib/store";
 import { cn } from "@/lib/utils";
 import { ReactNode } from "react";
 import { FloatingChat } from "@/components/FloatingChat";
+import { motion } from "framer-motion";
 
 interface DashboardLayoutProps {
     children: ReactNode;
@@ -14,19 +15,22 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
     const { isSidebarOpen } = useUIStore();
 
     return (
-        <div className="min-h-screen bg-background text-foreground flex overflow-hidden">
+        <div className="min-h-screen bg-[#0a0a0a] text-white flex overflow-hidden selection:bg-mint selection:text-black">
             <Sidebar />
-            <main
-                className={cn(
-                    "flex-1 transition-all duration-500 min-h-screen overflow-y-auto",
-                    isSidebarOpen ? "ml-64" : "ml-20"
-                )}
+            <motion.main
+                initial={false}
+                animate={{
+                    marginLeft: isSidebarOpen ? 256 : 80,
+                    width: `calc(100% - ${isSidebarOpen ? 256 : 80}px)`
+                }}
+                className="flex-1 transition-all duration-500 min-h-screen overflow-y-auto"
             >
-                <div className="max-w-7xl mx-auto p-4 md:p-10">
+                <div className="max-w-[1600px] mx-auto p-6 md:p-12 lg:p-16">
                     {children}
                 </div>
-            </main>
+            </motion.main>
             <FloatingChat />
         </div>
     );
 }
+
