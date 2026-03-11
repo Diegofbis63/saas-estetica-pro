@@ -68,11 +68,11 @@ function EditTransactionModal({
     const statusOptions = ['agendada', 'confirmada', 'completado', 'cancelado', 'no-show'];
 
     const statusColors: Record<string, string> = {
-        completado: 'text-mint border-mint/30 bg-mint/10',
-        cancelado: 'text-red-400 border-red-400/30 bg-red-400/10',
-        'no-show': 'text-orange-400 border-orange-400/30 bg-orange-400/10',
-        confirmada: 'text-indigo-400 border-indigo-400/30 bg-indigo-400/10',
-        agendada: 'text-blue-400 border-blue-400/30 bg-blue-400/10',
+        completado: 'text-rose-600 border-rose-500/30 bg-rose-50',
+        cancelado: 'text-red-600 border-red-500/30 bg-red-50',
+        'no-show': 'text-orange-600 border-orange-500/30 bg-orange-50',
+        confirmada: 'text-indigo-600 border-indigo-500/30 bg-indigo-50',
+        agendada: 'text-blue-600 border-blue-500/30 bg-blue-50',
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -93,17 +93,17 @@ function EditTransactionModal({
     };
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-md">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-md">
             <div className="absolute inset-0" onClick={onClose} />
-            <div className="relative w-full max-w-lg mx-4 bg-slate-950/95 border border-white/10 rounded-3xl shadow-2xl overflow-hidden">
+            <div className="relative w-full max-w-lg mx-4 bg-white/95 border border-black/5 rounded-3xl shadow-2xl overflow-hidden">
                 {/* Gradient header */}
-                <div className="bg-gradient-to-r from-mint/10 via-transparent to-indigo-500/10 border-b border-white/5 p-6">
+                <div className="bg-gradient-to-r from-rose-50 via-transparent to-rose-100 border-b border-black/5 p-6">
                     <div className="flex items-center justify-between">
                         <div>
-                            <h2 className="text-xl font-black tracking-tight">Editar Transacción</h2>
-                            <p className="text-white/40 text-sm mt-0.5">{tx.clientName} · {tx.service}</p>
+                            <h2 className="text-xl font-black tracking-tight text-foreground">Editar Transacción</h2>
+                            <p className="text-foreground/50 text-sm mt-0.5">{tx.clientName} · {tx.service}</p>
                         </div>
-                        <button onClick={onClose} className="p-2 rounded-xl hover:bg-white/5 text-white/40 hover:text-white transition-colors">
+                        <button onClick={onClose} className="p-2 rounded-xl hover:bg-black/5 text-foreground/40 hover:text-foreground transition-colors">
                             <X className="w-5 h-5" />
                         </button>
                     </div>
@@ -112,26 +112,26 @@ function EditTransactionModal({
                 <form onSubmit={handleSubmit} className="p-6 space-y-5">
                     <div className="grid grid-cols-2 gap-4">
                         <div>
-                            <label className="text-[10px] font-black uppercase tracking-widest text-white/30 mb-2 block">Fecha y Hora</label>
+                            <label className="text-[10px] font-black uppercase tracking-widest text-foreground/50 mb-2 block">Fecha y Hora</label>
                             <input type="datetime-local" value={form.date}
                                 onChange={e => setForm({ ...form, date: e.target.value })}
-                                className="w-full bg-white/5 border border-white/10 rounded-xl py-2.5 px-3 text-sm focus:outline-none focus:border-mint/50 transition-all text-white" />
+                                className="w-full bg-white border border-black/10 rounded-xl py-2.5 px-3 text-sm focus:outline-none focus:border-rose-400 focus:bg-rose-50/10 transition-all text-foreground shadow-sm" />
                         </div>
                         <div>
-                            <label className="text-[10px] font-black uppercase tracking-widest text-white/30 mb-2 block">Monto ($)</label>
+                            <label className="text-[10px] font-black uppercase tracking-widest text-foreground/50 mb-2 block">Monto ($)</label>
                             <input type="number" value={form.total_price}
                                 onChange={e => setForm({ ...form, total_price: Number(e.target.value) })}
-                                className="w-full bg-white/5 border border-white/10 rounded-xl py-2.5 px-3 text-sm focus:outline-none focus:border-mint/50 transition-all text-white" />
+                                className="w-full bg-white border border-black/10 rounded-xl py-2.5 px-3 text-sm focus:outline-none focus:border-rose-400 focus:bg-rose-50/10 transition-all text-foreground shadow-sm" />
                         </div>
                     </div>
 
                     <div>
-                        <label className="text-[10px] font-black uppercase tracking-widest text-white/30 mb-2 block">Estado</label>
+                        <label className="text-[10px] font-black uppercase tracking-widest text-foreground/50 mb-2 block">Estado</label>
                         <div className="flex flex-wrap gap-2">
                             {statusOptions.map(s => (
                                 <button type="button" key={s}
                                     onClick={() => setForm({ ...form, status: s })}
-                                    className={`px-3 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest border transition-all ${form.status === s ? statusColors[s] || 'text-white border-white/30 bg-white/10' : 'text-white/30 border-white/10 bg-transparent hover:border-white/20'}`}
+                                    className={`px-3 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest border transition-all ${form.status === s ? statusColors[s] || 'text-foreground border-black/30 bg-black/5' : 'text-foreground/50 border-black/10 bg-transparent hover:border-black/20'}`}
                                 >
                                     {s}
                                 </button>
@@ -140,33 +140,33 @@ function EditTransactionModal({
                     </div>
 
                     <div>
-                        <label className="text-[10px] font-black uppercase tracking-widest text-white/30 mb-2 block">Cliente</label>
+                        <label className="text-[10px] font-black uppercase tracking-widest text-foreground/50 mb-2 block">Cliente</label>
                         <select value={form.client_id} onChange={e => setForm({ ...form, client_id: e.target.value })}
-                            className="w-full bg-white/5 border border-white/10 rounded-xl py-2.5 px-3 text-sm focus:outline-none focus:border-mint/50 transition-all text-white">
+                            className="w-full bg-white border border-black/10 rounded-xl py-2.5 px-3 text-sm focus:outline-none focus:border-rose-400 focus:bg-rose-50/10 transition-all text-foreground shadow-sm">
                             <option value="">— Sin cambiar —</option>
                             {clientes.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
                         </select>
                     </div>
 
                     <div>
-                        <label className="text-[10px] font-black uppercase tracking-widest text-white/30 mb-2 block">Servicio</label>
+                        <label className="text-[10px] font-black uppercase tracking-widest text-foreground/50 mb-2 block">Servicio</label>
                         <select value={form.service_id} onChange={e => {
                             const srv = servicios.find(s => s.id === e.target.value);
                             setForm({ ...form, service_id: e.target.value, total_price: srv?.price || form.total_price });
                         }}
-                            className="w-full bg-white/5 border border-white/10 rounded-xl py-2.5 px-3 text-sm focus:outline-none focus:border-mint/50 transition-all text-white">
+                            className="w-full bg-white border border-black/10 rounded-xl py-2.5 px-3 text-sm focus:outline-none focus:border-rose-400 focus:bg-rose-50/10 transition-all text-foreground shadow-sm">
                             <option value="">— Sin cambiar —</option>
                             {servicios.map(s => <option key={s.id} value={s.id}>{s.name} — ${s.price?.toLocaleString('es-AR')}</option>)}
                         </select>
                     </div>
 
-                    <div className="flex gap-3 pt-2 border-t border-white/5">
+                    <div className="flex gap-3 pt-2 border-t border-black/5">
                         <button type="button" onClick={onClose}
-                            className="flex-1 py-2.5 rounded-xl border border-white/10 text-sm font-bold text-white/60 hover:bg-white/5 transition-all">
+                            className="flex-1 py-2.5 rounded-xl border border-black/10 text-sm font-bold text-foreground/60 hover:bg-black/5 transition-all">
                             Cancelar
                         </button>
                         <button type="submit" disabled={saving}
-                            className="flex-1 py-2.5 rounded-xl bg-mint text-slate-950 text-sm font-black tracking-tight hover:brightness-110 transition-all flex items-center justify-center gap-2 disabled:opacity-60">
+                            className="flex-1 py-2.5 rounded-xl bg-rose-500 text-white text-sm font-black tracking-tight hover:brightness-110 transition-all flex items-center justify-center gap-2 disabled:opacity-60 shadow-md shadow-rose-500/20">
                             {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Check className="w-4 h-4" />}
                             {saving ? 'Guardando...' : 'Guardar Cambios'}
                         </button>
@@ -231,11 +231,11 @@ const PERIODS: { id: Period; label: string }[] = [
 ];
 
 const STATUS_COLORS: Record<string, string> = {
-    completado: 'text-mint bg-mint/10 border-mint/20',
-    cancelado: 'text-red-400 bg-red-400/10 border-red-400/20',
-    'no-show': 'text-orange-400 bg-orange-400/10 border-orange-400/20',
-    confirmada: 'text-indigo-400 bg-indigo-400/10 border-indigo-400/20',
-    agendada: 'text-blue-400 bg-blue-400/10 border-blue-400/20',
+    completado: 'text-rose-600 bg-rose-50 border-rose-200',
+    cancelado: 'text-red-500 bg-red-50 border-red-200',
+    'no-show': 'text-orange-500 bg-orange-50 border-orange-200',
+    confirmada: 'text-indigo-500 bg-indigo-50 border-indigo-200',
+    agendada: 'text-blue-500 bg-blue-50 border-blue-200',
 };
 
 // ─── Main Page ─────────────────────────────────────────────────────────────────
@@ -325,8 +325,8 @@ export default function IngresosPage() {
     return (
         <div className="space-y-10 animate-fade-in relative">
             {isLoading && (
-                <div className="absolute inset-0 z-50 bg-slate-950/50 backdrop-blur-sm flex items-center justify-center rounded-2xl">
-                    <Loader2 className="w-8 h-8 text-mint animate-spin" />
+                <div className="absolute inset-0 z-50 bg-white/50 backdrop-blur-sm flex items-center justify-center rounded-2xl">
+                    <Loader2 className="w-8 h-8 text-rose-500 animate-spin" />
                 </div>
             )}
 
@@ -343,26 +343,26 @@ export default function IngresosPage() {
             {/* ── Header ── */}
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
-                    <h1 className="text-4xl font-black tracking-tight mb-1">Ingresos y Finanzas</h1>
-                    <p className="text-white/40 font-medium">Análisis de facturación en vivo · <span className="text-mint/70">{PERIOD_LABEL[period]}</span></p>
+                    <h1 className="text-4xl font-black tracking-tight mb-1 text-foreground">Ingresos y Finanzas</h1>
+                    <p className="text-foreground/50 font-medium">Análisis de facturación en vivo · <span className="text-rose-600 font-bold">{PERIOD_LABEL[period]}</span></p>
                 </div>
-                <Button variant="secondary" onClick={fetchData} className="h-fit self-start md:self-auto">
-                    <TrendingUp className="w-4 h-4 mr-2" />
+                <Button variant="secondary" onClick={fetchData} className="h-fit self-start md:self-auto bg-white/80 hover:bg-white shadow-sm border border-black/5">
+                    <TrendingUp className="w-4 h-4 mr-2 text-rose-500" />
                     Recargar
                 </Button>
             </div>
 
             {/* ── Filter Bar ── */}
-            <Card className="p-4 bg-white/[0.02] border-white/5">
+            <Card className="p-4 bg-white/70 border-black/5 shadow-sm">
                 <div className="flex flex-wrap items-center gap-3">
-                    <div className="flex items-center gap-1 bg-white/5 rounded-xl p-1">
+                    <div className="flex items-center gap-1 bg-black/5 rounded-xl p-1">
                         {PERIODS.map(p => (
                             <button
                                 key={p.id}
                                 onClick={() => setPeriod(p.id)}
                                 className={`px-4 py-1.5 rounded-lg text-sm font-bold transition-all duration-200 ${period === p.id
-                                    ? 'bg-mint text-slate-950 shadow-lg shadow-mint/20'
-                                    : 'text-white/50 hover:text-white hover:bg-white/5'
+                                    ? 'bg-rose-500 text-white shadow-md shadow-rose-500/20'
+                                    : 'text-foreground/50 hover:text-foreground hover:bg-black/5'
                                     }`}
                             >
                                 {p.label}
@@ -372,31 +372,31 @@ export default function IngresosPage() {
 
                     {period === 'custom' && (
                         <div className="flex items-center gap-2 flex-wrap">
-                            <div className="flex items-center gap-2 px-3 py-1.5 bg-white/5 border border-white/10 rounded-xl">
-                                <CalendarIcon className="w-4 h-4 text-mint" />
+                            <div className="flex items-center gap-2 px-3 py-1.5 bg-white border border-black/10 rounded-xl shadow-sm">
+                                <CalendarIcon className="w-4 h-4 text-rose-500" />
                                 <input
                                     type="date"
                                     value={customFrom}
                                     onChange={e => setCustomFrom(e.target.value)}
-                                    className="bg-transparent text-sm font-medium text-white focus:outline-none w-36"
+                                    className="bg-transparent text-sm font-medium text-foreground focus:outline-none w-36"
                                     placeholder="Desde"
                                 />
                             </div>
-                            <span className="text-white/20 font-bold">→</span>
-                            <div className="flex items-center gap-2 px-3 py-1.5 bg-white/5 border border-white/10 rounded-xl">
-                                <CalendarIcon className="w-4 h-4 text-mint" />
+                            <span className="text-foreground/30 font-bold">→</span>
+                            <div className="flex items-center gap-2 px-3 py-1.5 bg-white border border-black/10 rounded-xl shadow-sm">
+                                <CalendarIcon className="w-4 h-4 text-rose-500" />
                                 <input
                                     type="date"
                                     value={customTo}
                                     onChange={e => setCustomTo(e.target.value)}
-                                    className="bg-transparent text-sm font-medium text-white focus:outline-none w-36"
+                                    className="bg-transparent text-sm font-medium text-foreground focus:outline-none w-36"
                                     placeholder="Hasta"
                                 />
                             </div>
                         </div>
                     )}
 
-                    <div className="ml-auto text-xs font-bold text-white/25 tracking-widest uppercase">
+                    <div className="ml-auto text-xs font-bold text-foreground/40 tracking-widest uppercase">
                         {finances.appointmentsCount} transacciones · ${finances.totalRevenue.toLocaleString('es-AR')}
                     </div>
                 </div>
@@ -404,52 +404,52 @@ export default function IngresosPage() {
 
             {/* ── Quick Metrics ── */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <Card className="bg-white/[0.02] border-white/5 hover:bg-white/[0.04] transition-all">
+                <Card className="bg-white/70 border-black/5 hover:bg-white shadow-sm transition-all hover:shadow-md">
                     <div className="flex items-center justify-between mb-4">
-                        <h3 className="text-sm font-black uppercase tracking-widest text-white/50">Facturación Total</h3>
-                        <div className="p-2 rounded-lg bg-mint/10">
-                            <DollarSign className="w-4 h-4 text-mint" />
+                        <h3 className="text-sm font-black uppercase tracking-widest text-foreground/50">Facturación Total</h3>
+                        <div className="p-2 rounded-lg bg-rose-50 border border-rose-100">
+                            <DollarSign className="w-4 h-4 text-rose-600" />
                         </div>
                     </div>
-                    <p className="text-4xl font-black tracking-tighter text-glow-mint">${finances.totalRevenue.toLocaleString('es-AR')}</p>
-                    <p className="text-xs text-mint mt-2 font-bold flex items-center gap-1">
+                    <p className="text-4xl font-black tracking-tighter text-foreground">${finances.totalRevenue.toLocaleString('es-AR')}</p>
+                    <p className="text-xs text-rose-600 mt-2 font-bold flex items-center gap-1">
                         <TrendingUp className="w-3 h-3" />
                         {PERIOD_LABEL[period]}
                     </p>
                 </Card>
-                <Card className="bg-white/[0.02] border-white/5 hover:bg-white/[0.04] transition-all">
+                <Card className="bg-white/70 border-black/5 hover:bg-white shadow-sm transition-all hover:shadow-md">
                     <div className="flex items-center justify-between mb-4">
-                        <h3 className="text-sm font-black uppercase tracking-widest text-white/50">Ticket Promedio</h3>
-                        <div className="p-2 rounded-lg bg-indigo-500/10">
-                            <TrendingUp className="w-4 h-4 text-indigo-400" />
+                        <h3 className="text-sm font-black uppercase tracking-widest text-foreground/50">Ticket Promedio</h3>
+                        <div className="p-2 rounded-lg bg-indigo-50 border border-indigo-100">
+                            <TrendingUp className="w-4 h-4 text-indigo-500" />
                         </div>
                     </div>
-                    <p className="text-4xl font-black tracking-tighter">${Math.round(finances.averageTicket).toLocaleString('es-AR')}</p>
-                    <p className="text-xs text-indigo-400 mt-2 font-bold">Por servicio realizado</p>
+                    <p className="text-4xl font-black tracking-tighter text-foreground">${Math.round(finances.averageTicket).toLocaleString('es-AR')}</p>
+                    <p className="text-xs text-indigo-500 mt-2 font-bold">Por servicio realizado</p>
                 </Card>
-                <Card className="bg-white/[0.02] border-white/5 hover:bg-white/[0.04] transition-all">
+                <Card className="bg-white/70 border-black/5 hover:bg-white shadow-sm transition-all hover:shadow-md">
                     <div className="flex items-center justify-between mb-4">
-                        <h3 className="text-sm font-black uppercase tracking-widest text-white/50">Citas en Período</h3>
-                        <div className="p-2 rounded-lg bg-purple-500/10">
-                            <CalendarIcon className="w-4 h-4 text-purple-400" />
+                        <h3 className="text-sm font-black uppercase tracking-widest text-foreground/50">Citas en Período</h3>
+                        <div className="p-2 rounded-lg bg-purple-50 border border-purple-100">
+                            <CalendarIcon className="w-4 h-4 text-purple-500" />
                         </div>
                     </div>
-                    <p className="text-4xl font-black tracking-tighter">{finances.appointmentsCount}</p>
-                    <p className="text-xs text-purple-400 mt-2 font-bold">{PERIOD_LABEL[period]}</p>
+                    <p className="text-4xl font-black tracking-tighter text-foreground">{finances.appointmentsCount}</p>
+                    <p className="text-xs text-purple-500 mt-2 font-bold">{PERIOD_LABEL[period]}</p>
                 </Card>
             </div>
 
             {/* ── Chart ── */}
-            <Card className="p-6 bg-white/[0.02] border border-white/5">
+            <Card className="p-6 bg-white/70 border border-black/5 shadow-sm">
                 <div className="mb-6 flex items-start justify-between">
                     <div>
-                        <h2 className="text-xl font-black tracking-tight">Evolución de Ingresos</h2>
-                        <p className="text-sm text-white/40 font-medium">Facturación de servicios premium · {PERIOD_LABEL[period]}</p>
+                        <h2 className="text-xl font-black tracking-tight text-foreground">Evolución de Ingresos</h2>
+                        <p className="text-sm text-foreground/50 font-medium">Facturación de servicios premium · {PERIOD_LABEL[period]}</p>
                     </div>
                 </div>
                 <div className="h-[360px] w-full">
                     {finances.chartData.length === 0 ? (
-                        <div className="w-full h-full flex flex-col items-center justify-center text-white/30 text-sm">
+                        <div className="w-full h-full flex flex-col items-center justify-center text-foreground/30 text-sm">
                             <TrendingUp className="w-8 h-8 mb-4 opacity-50" />
                             Sin datos para el período seleccionado.
                         </div>
@@ -458,19 +458,19 @@ export default function IngresosPage() {
                             <AreaChart data={finances.chartData} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
                                 <defs>
                                     <linearGradient id="colorIngresos" x1="0" y1="0" x2="0" y2="1">
-                                        <stop offset="5%" stopColor="#10b981" stopOpacity={0.3} />
-                                        <stop offset="95%" stopColor="#10b981" stopOpacity={0} />
+                                        <stop offset="5%" stopColor="#f43f5e" stopOpacity={0.2} />
+                                        <stop offset="95%" stopColor="#f43f5e" stopOpacity={0} />
                                     </linearGradient>
                                 </defs>
-                                <CartesianGrid strokeDasharray="3 3" stroke="#ffffff10" vertical={false} />
-                                <XAxis dataKey="displayDate" stroke="#ffffff50" fontSize={11} tickLine={false} axisLine={false} dy={10} />
-                                <YAxis stroke="#ffffff50" fontSize={11} tickLine={false} axisLine={false} tickFormatter={(v) => `$${v >= 1000 ? (v / 1000).toFixed(0) + 'k' : v}`} dx={-10} />
+                                <CartesianGrid strokeDasharray="3 3" stroke="#00000010" vertical={false} />
+                                <XAxis dataKey="displayDate" stroke="#00000050" fontSize={11} tickLine={false} axisLine={false} dy={10} />
+                                <YAxis stroke="#00000050" fontSize={11} tickLine={false} axisLine={false} tickFormatter={(v) => `$${v >= 1000 ? (v / 1000).toFixed(0) + 'k' : v}`} dx={-10} />
                                 <Tooltip
-                                    contentStyle={{ backgroundColor: '#020617', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px', boxShadow: '0 8px 32px rgba(0,0,0,0.5)' }}
-                                    itemStyle={{ color: '#10b981', fontWeight: 'bold' }}
-                                    labelStyle={{ color: 'rgba(255,255,255,0.5)', marginBottom: '4px' }}
+                                    contentStyle={{ backgroundColor: '#ffffff', border: '1px solid rgba(0,0,0,0.05)', borderRadius: '12px', boxShadow: '0 8px 32px rgba(0,0,0,0.05)' }}
+                                    itemStyle={{ color: '#f43f5e', fontWeight: 'bold' }}
+                                    labelStyle={{ color: 'rgba(0,0,0,0.5)', marginBottom: '4px' }}
                                 />
-                                <Area type="monotone" dataKey="ingresos" stroke="#10b981" strokeWidth={3} fillOpacity={1} fill="url(#colorIngresos)" animationDuration={800} />
+                                <Area type="monotone" dataKey="ingresos" stroke="#f43f5e" strokeWidth={3} fillOpacity={1} fill="url(#colorIngresos)" animationDuration={800} />
                             </AreaChart>
                         </ResponsiveContainer>
                     )}
@@ -478,59 +478,59 @@ export default function IngresosPage() {
             </Card>
 
             {/* ── Transactions Table ── */}
-            <Card className="overflow-hidden">
-                <div className="p-6 border-b border-white/5 flex items-center justify-between">
+            <Card className="overflow-hidden bg-white/70 shadow-sm border-black/5">
+                <div className="p-6 border-b border-black/5 flex items-center justify-between">
                     <div>
-                        <h2 className="text-xl font-black tracking-tight">Últimos Pagos Recibidos</h2>
-                        <p className="text-xs text-white/30 mt-0.5 font-medium">
+                        <h2 className="text-xl font-black tracking-tight text-foreground">Últimos Pagos Recibidos</h2>
+                        <p className="text-xs text-foreground/40 mt-0.5 font-medium">
                             {finances.transactions.length} registros · haz clic en ✏️ para editar
                         </p>
                     </div>
                 </div>
                 <div className="overflow-x-auto">
                     <table className="w-full text-sm text-left">
-                        <thead className="text-[10px] uppercase bg-white/[0.02] text-white/40">
+                        <thead className="text-[10px] uppercase bg-black/[0.02] text-foreground/40 border-b border-black/5">
                             <tr>
                                 <th scope="col" className="px-6 py-4 font-black tracking-widest">Cliente</th>
                                 <th scope="col" className="px-6 py-4 font-black tracking-widest">Servicio</th>
                                 <th scope="col" className="px-6 py-4 font-black tracking-widest">Fecha</th>
                                 <th scope="col" className="px-6 py-4 font-black tracking-widest">Monto</th>
                                 <th scope="col" className="px-6 py-4 font-black tracking-widest">Estado</th>
-                                <th scope="col" className="px-6 py-4 font-black tracking-widest">Acción</th>
+                                <th scope="col" className="px-6 py-4 font-black tracking-widest text-right">Acción</th>
                             </tr>
                         </thead>
-                        <tbody className="divide-y divide-white/5">
+                        <tbody className="divide-y divide-black/5">
                             {finances.transactions.length === 0 && (
                                 <tr>
-                                    <td colSpan={6} className="px-6 py-8 text-center text-white/30">
+                                    <td colSpan={6} className="px-6 py-8 text-center text-foreground/30">
                                         Sin transacciones en el período seleccionado.
                                     </td>
                                 </tr>
                             )}
                             {finances.transactions.map((appo, i) => (
-                                <tr key={appo.id || i} className="hover:bg-white/[0.02] transition-colors group">
+                                <tr key={appo.id || i} className="hover:bg-black/[0.02] bg-white transition-colors group">
                                     <td className="px-6 py-4">
                                         <div className="flex items-center gap-3">
-                                            <div className="w-7 h-7 rounded-lg bg-mint/10 border border-mint/20 flex items-center justify-center text-mint font-black text-xs flex-shrink-0">
+                                            <div className="w-7 h-7 rounded-lg bg-rose-50 border border-rose-100 flex items-center justify-center text-rose-600 font-black text-xs flex-shrink-0">
                                                 {appo.clientName[0]?.toUpperCase()}
                                             </div>
-                                            <span className="font-semibold text-white">{appo.clientName}</span>
+                                            <span className="font-semibold text-foreground">{appo.clientName}</span>
                                         </div>
                                     </td>
-                                    <td className="px-6 py-4 text-white/60">{appo.service}</td>
-                                    <td className="px-6 py-4 text-white/40 font-medium">{appo.date}</td>
+                                    <td className="px-6 py-4 text-foreground/60">{appo.service}</td>
+                                    <td className="px-6 py-4 text-foreground/40 font-medium">{appo.date}</td>
                                     <td className="px-6 py-4">
-                                        <span className="font-black text-mint text-base">${appo.price.toLocaleString('es-AR')}</span>
+                                        <span className="font-black text-foreground text-base">${appo.price.toLocaleString('es-AR')}</span>
                                     </td>
                                     <td className="px-6 py-4">
-                                        <span className={`px-2.5 py-1 rounded-full text-[10px] font-black tracking-widest uppercase border ${STATUS_COLORS[appo.status] || 'text-white/40 bg-white/5 border-white/10'}`}>
+                                        <span className={`px-2.5 py-1 rounded-full text-[10px] font-black tracking-widest uppercase border ${STATUS_COLORS[appo.status] || 'text-foreground/40 bg-black/5 border-black/10'}`}>
                                             {appo.status}
                                         </span>
                                     </td>
-                                    <td className="px-6 py-4">
+                                    <td className="px-6 py-4 text-right">
                                         <button
                                             onClick={() => setEditingTx(appo)}
-                                            className="p-2 rounded-xl hover:bg-mint/10 text-white/30 hover:text-mint transition-all"
+                                            className="p-2 rounded-xl hover:bg-rose-50 text-foreground/30 hover:text-rose-500 transition-all ml-auto block"
                                             title="Editar transacción"
                                         >
                                             <Edit2 className="w-4 h-4" />

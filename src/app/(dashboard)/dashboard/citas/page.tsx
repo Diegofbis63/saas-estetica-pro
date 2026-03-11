@@ -52,23 +52,23 @@ function EditCitaModal({ cita, clientes, servicios, onClose, onSuccess }: EditMo
     };
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
-            <Card className="w-full max-w-md mx-4">
-                <h2 className="text-xl font-black mb-6">Editar Cita</h2>
-                <p className="text-white/40 text-sm mb-4">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm">
+            <Card className="w-full max-w-md mx-4 bg-white border border-black/5 shadow-xl">
+                <h2 className="text-xl font-black mb-6 text-foreground">Editar Cita</h2>
+                <p className="text-foreground/50 text-sm mb-4">
                     {cita.clients?.name} · {cita.services?.name}
                 </p>
                 <form onSubmit={handleSubmit} className="space-y-4">
                     <div>
-                        <label className="text-xs font-black uppercase tracking-widest text-white/40 mb-2 block">Fecha y Hora</label>
+                        <label className="text-xs font-black uppercase tracking-widest text-foreground/50 mb-2 block">Fecha y Hora</label>
                         <input type="datetime-local" value={form.date}
                             onChange={e => setForm({ ...form, date: e.target.value })}
-                            className="w-full bg-white/5 border border-white/10 rounded-xl py-2.5 px-4 text-sm focus:outline-none focus:border-mint/50 transition-all text-white" />
+                            className="w-full bg-white border border-black/10 rounded-xl py-2.5 px-4 text-sm focus:outline-none focus:border-rose-400 focus:bg-rose-50/10 transition-all text-foreground shadow-sm" />
                     </div>
                     <div>
-                        <label className="text-xs font-black uppercase tracking-widest text-white/40 mb-2 block">Estado</label>
+                        <label className="text-xs font-black uppercase tracking-widest text-foreground/50 mb-2 block">Estado</label>
                         <select value={form.status} onChange={e => setForm({ ...form, status: e.target.value })}
-                            className="w-full bg-white/5 border border-white/10 rounded-xl py-2.5 px-4 text-sm focus:outline-none focus:border-mint/50 transition-all text-white">
+                            className="w-full bg-white border border-black/10 rounded-xl py-2.5 px-4 text-sm focus:outline-none focus:border-rose-400 focus:bg-rose-50/10 transition-all text-foreground shadow-sm">
                             <option value="agendada">Agendada</option>
                             <option value="completado">Completada</option>
                             <option value="cancelado">Cancelada</option>
@@ -76,33 +76,33 @@ function EditCitaModal({ cita, clientes, servicios, onClose, onSuccess }: EditMo
                         </select>
                     </div>
                     <div>
-                        <label className="text-xs font-black uppercase tracking-widest text-white/40 mb-2 block">Cliente</label>
+                        <label className="text-xs font-black uppercase tracking-widest text-foreground/50 mb-2 block">Cliente</label>
                         <select value={form.client_id} onChange={e => setForm({ ...form, client_id: e.target.value })}
-                            className="w-full bg-white/5 border border-white/10 rounded-xl py-2.5 px-4 text-sm focus:outline-none focus:border-mint/50 transition-all text-white">
+                            className="w-full bg-white border border-black/10 rounded-xl py-2.5 px-4 text-sm focus:outline-none focus:border-rose-400 focus:bg-rose-50/10 transition-all text-foreground shadow-sm">
                             <option value="">— Sin cambiar —</option>
                             {clientes.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
                         </select>
                     </div>
                     <div>
-                        <label className="text-xs font-black uppercase tracking-widest text-white/40 mb-2 block">Servicio</label>
+                        <label className="text-xs font-black uppercase tracking-widest text-foreground/50 mb-2 block">Servicio</label>
                         <select value={form.service_id} onChange={e => {
                             const srv = servicios.find(s => s.id === e.target.value);
                             setForm({ ...form, service_id: e.target.value, total_price: srv?.price || form.total_price });
                         }}
-                            className="w-full bg-white/5 border border-white/10 rounded-xl py-2.5 px-4 text-sm focus:outline-none focus:border-mint/50 transition-all text-white">
+                            className="w-full bg-white border border-black/10 rounded-xl py-2.5 px-4 text-sm focus:outline-none focus:border-rose-400 focus:bg-rose-50/10 transition-all text-foreground shadow-sm">
                             <option value="">— Sin cambiar —</option>
                             {servicios.map(s => <option key={s.id} value={s.id}>{s.name} — ${s.price?.toLocaleString('es-AR')}</option>)}
                         </select>
                     </div>
                     <div>
-                        <label className="text-xs font-black uppercase tracking-widest text-white/40 mb-2 block">Precio Total</label>
+                        <label className="text-xs font-black uppercase tracking-widest text-foreground/50 mb-2 block">Precio Total</label>
                         <input type="number" value={form.total_price}
                             onChange={e => setForm({ ...form, total_price: Number(e.target.value) })}
-                            className="w-full bg-white/5 border border-white/10 rounded-xl py-2.5 px-4 text-sm focus:outline-none focus:border-mint/50 transition-all text-white" />
+                            className="w-full bg-white border border-black/10 rounded-xl py-2.5 px-4 text-sm focus:outline-none focus:border-rose-400 focus:bg-rose-50/10 transition-all text-foreground shadow-sm" />
                     </div>
                     <div className="flex gap-3 pt-2">
-                        <Button type="button" variant="secondary" className="flex-1" onClick={onClose}>Cancelar</Button>
-                        <Button type="submit" className="flex-1" disabled={saving}>{saving ? 'Guardando...' : 'Guardar'}</Button>
+                        <Button type="button" variant="outline" className="flex-1" onClick={onClose}>Cancelar</Button>
+                        <Button type="submit" className="flex-1 bg-rose-500 hover:bg-rose-600 text-white" disabled={saving}>{saving ? 'Guardando...' : 'Guardar'}</Button>
                     </div>
                 </form>
             </Card>
@@ -112,10 +112,10 @@ function EditCitaModal({ cita, clientes, servicios, onClose, onSuccess }: EditMo
 
 const getStatusColor = (status: string) => {
     switch (status) {
-        case 'completado': return 'text-mint bg-mint/10 border-mint/20';
-        case 'cancelado': return 'text-red-400 bg-red-400/10 border-red-400/20';
-        case 'no-show': return 'text-orange-400 bg-orange-400/10 border-orange-400/20';
-        default: return 'text-indigo-400 bg-indigo-400/10 border-indigo-400/20';
+        case 'completado': return 'text-rose-600 bg-rose-50 border-rose-200';
+        case 'cancelado': return 'text-red-600 bg-red-50 border-red-200';
+        case 'no-show': return 'text-orange-600 bg-orange-50 border-orange-200';
+        default: return 'text-indigo-600 bg-indigo-50 border-indigo-200';
     }
 };
 
@@ -175,55 +175,55 @@ export default function CitasPage() {
 
             <div className="flex items-center justify-between">
                 <div>
-                    <h1 className="text-3xl font-black tracking-tight">Citas</h1>
-                    <p className="text-white/40">Gestión de turnos y agenda.</p>
+                    <h1 className="text-3xl font-black tracking-tight text-foreground">Citas</h1>
+                    <p className="text-foreground/50">Gestión de turnos y agenda.</p>
                 </div>
-                <Button onClick={fetchCitas} variant="secondary">
-                    <CalendarIcon className="w-5 h-5" />
+                <Button onClick={fetchCitas} variant="outline" className="bg-white/80 hover:bg-white shadow-[0_4px_10px_rgba(0,0,0,0.03)] border-black/5">
+                    <CalendarIcon className="w-5 h-5 text-rose-500" />
                     Actualizar
                 </Button>
             </div>
 
             <div className="space-y-4">
                 {loading ? (
-                    [1, 2, 3].map(i => <Card key={i} className="animate-pulse h-24 bg-white/[0.01]"> </Card>)
+                    [1, 2, 3].map(i => <Card key={i} className="animate-pulse h-24 bg-white border border-black/5 shadow-sm"> </Card>)
                 ) : citas.length === 0 ? (
-                    <Card className="py-20 text-center">
-                        <CalendarIcon className="w-12 h-12 text-white/5 mx-auto mb-4" />
-                        <p className="text-white/20 font-bold">No hay citas programadas.</p>
-                        <p className="text-white/20 text-xs mt-2">Pedile al Copilot que agende una cita.</p>
+                    <Card className="py-20 text-center bg-white border border-black/5 shadow-sm">
+                        <CalendarIcon className="w-12 h-12 text-foreground/10 mx-auto mb-4" />
+                        <p className="text-foreground/40 font-bold">No hay citas programadas.</p>
+                        <p className="text-foreground/30 text-xs mt-2">Pedile al Copilot que agende una cita.</p>
                     </Card>
                 ) : (
                     citas.map((cita) => (
-                        <Card key={cita.id} className="p-4 flex flex-col md:flex-row md:items-center justify-between gap-6 group">
+                        <Card key={cita.id} className="p-4 flex flex-col md:flex-row md:items-center justify-between gap-6 group bg-white border border-black/5 shadow-sm hover:shadow-md transition-shadow">
                             <div className="flex items-center gap-6">
                                 {/* Date Badge */}
-                                <div className="flex flex-col items-center justify-center p-3 rounded-2xl bg-white/5 border border-white/10 min-w-[100px] group-hover:bg-mint/5 group-hover:border-mint/20 transition-all duration-500">
-                                    <span className="text-[10px] font-black uppercase tracking-widest text-white/40 group-hover:text-mint/60">
+                                <div className="flex flex-col items-center justify-center p-3 rounded-2xl bg-black/5 border border-black/5 min-w-[100px] group-hover:bg-rose-50/50 group-hover:border-rose-100 transition-all duration-500">
+                                    <span className="text-[10px] font-black uppercase tracking-widest text-foreground/40 group-hover:text-rose-500/60">
                                         {format(new Date(cita.date), "EEE", { locale: es })}
                                     </span>
-                                    <span className="text-2xl font-black tracking-tighter">
+                                    <span className="text-2xl font-black tracking-tighter text-foreground group-hover:text-rose-600">
                                         {format(new Date(cita.date), "HH:mm")}
                                     </span>
-                                    <span className="text-[10px] font-black text-white/20 px-2 py-0.5 rounded-full bg-white/5 mt-1">
+                                    <span className="text-[10px] font-black text-foreground/30 px-2 py-0.5 rounded-full bg-black/5 mt-1">
                                         {format(new Date(cita.date), "dd MMM", { locale: es })}
                                     </span>
                                 </div>
 
                                 <div className="space-y-1">
                                     <div className="flex items-center gap-2">
-                                        <User className="w-4 h-4 text-mint" />
-                                        <h3 className="font-bold text-lg tracking-tight">
+                                        <User className="w-4 h-4 text-rose-500" />
+                                        <h3 className="font-bold text-lg tracking-tight text-foreground">
                                             {(cita.clients as { name: string })?.name || 'Cliente'}
                                         </h3>
                                     </div>
-                                    <div className="flex items-center gap-2 text-white/40 text-sm">
+                                    <div className="flex items-center gap-2 text-foreground/50 text-sm">
                                         <Scissors className="w-3.5 h-3.5" />
                                         <span className="font-medium">
                                             {(cita.services as { name: string; price: number })?.name || 'Servicio'}
                                         </span>
-                                        <span className="w-1 h-1 rounded-full bg-white/10" />
-                                        <span className="text-mint/60 font-bold">
+                                        <span className="w-1 h-1 rounded-full bg-black/10" />
+                                        <span className="text-rose-600 font-bold">
                                             ${cita.total_price?.toLocaleString('es-AR')}
                                         </span>
                                     </div>
@@ -237,21 +237,21 @@ export default function CitasPage() {
                                 <div className="flex items-center gap-2">
                                     <button
                                         onClick={() => setEditingCita(cita)}
-                                        className="p-2 rounded-xl hover:bg-indigo-500/10 text-white/20 hover:text-indigo-400 transition-all"
+                                        className="p-2 rounded-xl hover:bg-indigo-50 text-foreground/30 hover:text-indigo-600 transition-all"
                                         title="Editar cita"
                                     >
                                         <Edit2 className="w-5 h-5" />
                                     </button>
                                     <button
                                         onClick={() => updateStatus(cita.id, 'completado')}
-                                        className="p-2 rounded-xl hover:bg-mint/10 text-white/20 hover:text-mint transition-all"
+                                        className="p-2 rounded-xl hover:bg-rose-50 text-foreground/30 hover:text-rose-600 transition-all"
                                         title="Marcar como completada"
                                     >
                                         <CheckCircle2 className="w-5 h-5" />
                                     </button>
                                     <button
                                         onClick={() => updateStatus(cita.id, 'cancelado')}
-                                        className="p-2 rounded-xl hover:bg-red-500/10 text-white/20 hover:text-red-400 transition-all"
+                                        className="p-2 rounded-xl hover:bg-red-50 text-foreground/30 hover:text-red-500 transition-all"
                                         title="Cancelar cita"
                                     >
                                         <XCircle className="w-5 h-5" />

@@ -45,28 +45,28 @@ function ClienteModal({ cliente, onClose, onSuccess }: {
     };
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
-            <Card className="w-full max-w-md mx-4">
-                <h2 className="text-xl font-black mb-6">{cliente ? 'Editar Cliente' : 'Nuevo Cliente'}</h2>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm">
+            <Card className="w-full max-w-md mx-4 bg-white border border-black/5 shadow-xl">
+                <h2 className="text-xl font-black mb-6 text-foreground">{cliente ? 'Editar Cliente' : 'Nuevo Cliente'}</h2>
                 <form onSubmit={handleSubmit} className="space-y-4">
                     <div>
-                        <label className="text-xs font-black uppercase tracking-widest text-white/40 mb-2 block">Nombre</label>
+                        <label className="text-xs font-black uppercase tracking-widest text-foreground/50 mb-2 block">Nombre</label>
                         <input required value={form.name} onChange={e => setForm({ ...form, name: e.target.value })}
-                            className="w-full bg-white/5 border border-white/10 rounded-xl py-2.5 px-4 text-sm focus:outline-none focus:border-mint/50 transition-all text-white" />
+                            className="w-full bg-white border border-black/10 rounded-xl py-2.5 px-4 text-sm focus:outline-none focus:border-rose-400 focus:bg-rose-50/10 transition-all text-foreground shadow-sm" />
                     </div>
                     <div>
-                        <label className="text-xs font-black uppercase tracking-widest text-white/40 mb-2 block">Email</label>
+                        <label className="text-xs font-black uppercase tracking-widest text-foreground/50 mb-2 block">Email</label>
                         <input type="email" value={form.email} onChange={e => setForm({ ...form, email: e.target.value })}
-                            className="w-full bg-white/5 border border-white/10 rounded-xl py-2.5 px-4 text-sm focus:outline-none focus:border-mint/50 transition-all text-white" />
+                            className="w-full bg-white border border-black/10 rounded-xl py-2.5 px-4 text-sm focus:outline-none focus:border-rose-400 focus:bg-rose-50/10 transition-all text-foreground shadow-sm" />
                     </div>
                     <div>
-                        <label className="text-xs font-black uppercase tracking-widest text-white/40 mb-2 block">Teléfono</label>
+                        <label className="text-xs font-black uppercase tracking-widest text-foreground/50 mb-2 block">Teléfono</label>
                         <input value={form.phone} onChange={e => setForm({ ...form, phone: e.target.value })}
-                            className="w-full bg-white/5 border border-white/10 rounded-xl py-2.5 px-4 text-sm focus:outline-none focus:border-mint/50 transition-all text-white" />
+                            className="w-full bg-white border border-black/10 rounded-xl py-2.5 px-4 text-sm focus:outline-none focus:border-rose-400 focus:bg-rose-50/10 transition-all text-foreground shadow-sm" />
                     </div>
                     <div className="flex gap-3 pt-2">
-                        <Button type="button" variant="secondary" className="flex-1" onClick={onClose}>Cancelar</Button>
-                        <Button type="submit" className="flex-1" disabled={saving}>{saving ? 'Guardando...' : 'Guardar'}</Button>
+                        <Button type="button" variant="outline" className="flex-1" onClick={onClose}>Cancelar</Button>
+                        <Button type="submit" className="flex-1 bg-rose-500 hover:bg-rose-600 text-white" disabled={saving}>{saving ? 'Guardando...' : 'Guardar'}</Button>
                     </div>
                 </form>
             </Card>
@@ -120,25 +120,25 @@ export default function ClientesPage() {
 
             <div className="flex items-center justify-between">
                 <div>
-                    <h1 className="text-3xl font-black tracking-tight">Clientes</h1>
-                    <p className="text-white/40">Gestioná tu base de datos de pacientes.</p>
+                    <h1 className="text-3xl font-black tracking-tight text-foreground">Clientes</h1>
+                    <p className="text-foreground/50">Gestioná tu base de datos de pacientes.</p>
                 </div>
                 <Button onClick={() => { setEditingCliente(null); setShowModal(true); }}>
-                    <Plus className="w-5 h-5" />
+                    <Plus className="w-5 h-5 mr-1" />
                     Nuevo Cliente
                 </Button>
             </div>
 
-            <Card className="p-0 overflow-hidden">
-                <div className="p-6 border-b border-white/5 bg-white/[0.01] flex items-center justify-between">
+            <Card className="p-0 overflow-hidden bg-white/70 border-black/5 shadow-sm">
+                <div className="p-6 border-b border-black/5 flex items-center justify-between">
                     <div className="relative w-full max-w-sm">
-                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/20" />
+                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-foreground/40" />
                         <input
                             type="text"
                             placeholder="Buscar por nombre, teléfono o email..."
                             value={searchTerm}
                             onChange={e => setSearchTerm(e.target.value)}
-                            className="w-full bg-white/5 border border-white/10 rounded-xl py-2 pl-10 pr-4 text-sm focus:outline-none focus:border-mint/50 transition-all text-white"
+                            className="w-full bg-white border border-black/10 rounded-xl py-2 pl-10 pr-4 text-sm focus:outline-none focus:border-rose-400 focus:bg-rose-50/10 transition-all text-foreground shadow-sm"
                         />
                     </div>
                 </div>
@@ -146,7 +146,7 @@ export default function ClientesPage() {
                 <div className="overflow-x-auto">
                     <table className="w-full text-left">
                         <thead>
-                            <tr className="border-b border-white/5 text-[10px] font-black uppercase tracking-widest text-white/20">
+                            <tr className="border-b border-black/5 text-[10px] font-black uppercase tracking-widest text-foreground/40 bg-black/[0.02]">
                                 <th className="px-6 py-4">Cliente</th>
                                 <th className="px-6 py-4"><Phone className="w-3 h-3 inline mr-1" />Teléfono</th>
                                 <th className="px-6 py-4"><Mail className="w-3 h-3 inline mr-1" />Email</th>
@@ -154,48 +154,48 @@ export default function ClientesPage() {
                                 <th className="px-6 py-4">Acciones</th>
                             </tr>
                         </thead>
-                        <tbody className="divide-y divide-white/5">
+                        <tbody className="divide-y divide-black/5">
                             {loading ? (
                                 [1, 2, 3].map(i => (
                                     <tr key={i} className="animate-pulse">
-                                        <td colSpan={5} className="px-6 py-8 bg-white/[0.01]" />
+                                        <td colSpan={5} className="px-6 py-8 bg-white border-b border-black/5" />
                                     </tr>
                                 ))
                             ) : filtered.length === 0 ? (
                                 <tr>
-                                    <td colSpan={5} className="px-6 py-20 text-center">
-                                        <User className="w-12 h-12 text-white/5 mx-auto mb-4" />
-                                        <p className="text-white/20 font-bold">No se encontraron clientes.</p>
+                                    <td colSpan={5} className="px-6 py-20 text-center bg-white border-b border-black/5">
+                                        <User className="w-12 h-12 text-foreground/10 mx-auto mb-4" />
+                                        <p className="text-foreground/40 font-bold">No se encontraron clientes.</p>
                                     </td>
                                 </tr>
                             ) : (
                                 filtered.map(cliente => (
-                                    <tr key={cliente.id} className="group hover:bg-white/[0.02] transition-colors">
+                                    <tr key={cliente.id} className="group hover:bg-black/[0.02] bg-white transition-colors">
                                         <td className="px-6 py-4">
                                             <div className="flex items-center gap-3">
-                                                <div className="w-8 h-8 rounded-lg bg-mint/10 border border-mint/20 flex items-center justify-center text-mint font-bold text-xs">
+                                                <div className="w-8 h-8 rounded-lg bg-rose-50 border border-rose-100 flex items-center justify-center text-rose-600 font-bold text-xs">
                                                     {cliente.name?.[0]?.toUpperCase() || '?'}
                                                 </div>
-                                                <span className="font-bold text-sm tracking-tight">{cliente.name}</span>
+                                                <span className="font-bold text-sm tracking-tight text-foreground">{cliente.name}</span>
                                             </div>
                                         </td>
-                                        <td className="px-6 py-4 text-sm text-white/60">{cliente.phone || '-'}</td>
-                                        <td className="px-6 py-4 text-sm text-white/60">{cliente.email || '-'}</td>
-                                        <td className="px-6 py-4 text-sm text-white/40">
+                                        <td className="px-6 py-4 text-sm text-foreground/60">{cliente.phone || '-'}</td>
+                                        <td className="px-6 py-4 text-sm text-foreground/60">{cliente.email || '-'}</td>
+                                        <td className="px-6 py-4 text-sm text-foreground/40">
                                             {new Date(cliente.created_at).toLocaleDateString('es-AR', { day: '2-digit', month: 'short', year: '2-digit' })}
                                         </td>
                                         <td className="px-6 py-4">
                                             <div className="flex items-center gap-2">
                                                 <button
                                                     onClick={() => { setEditingCliente(cliente); setShowModal(true); }}
-                                                    className="p-2 rounded-lg hover:bg-mint/10 text-white/20 hover:text-mint transition-colors"
+                                                    className="p-2 rounded-lg hover:bg-rose-50 text-foreground/30 hover:text-rose-500 transition-colors"
                                                     title="Editar cliente"
                                                 >
                                                     <Edit2 className="w-4 h-4" />
                                                 </button>
                                                 <button
                                                     onClick={() => deleteCliente(cliente.id)}
-                                                    className="p-2 rounded-lg hover:bg-red-500/10 text-white/20 hover:text-red-400 transition-colors"
+                                                    className="p-2 rounded-lg hover:bg-red-50 text-foreground/30 hover:text-red-500 transition-colors"
                                                     title="Eliminar cliente"
                                                 >
                                                     <Trash2 className="w-4 h-4" />

@@ -15,7 +15,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
     const { isSidebarOpen } = useUIStore();
 
     return (
-        <div className="min-h-screen bg-[#0a0a0a] text-white flex overflow-hidden selection:bg-mint selection:text-black">
+        <div className="min-h-screen bg-background text-foreground flex overflow-hidden selection:bg-rose-500/30 selection:text-foreground">
             <Sidebar />
             <motion.main
                 initial={false}
