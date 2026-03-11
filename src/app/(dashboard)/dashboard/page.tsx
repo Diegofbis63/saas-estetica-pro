@@ -22,7 +22,7 @@ import { cn } from "@/lib/utils";
 // URLs de imágenes premium para centros de estética
 const STYLIST_IMAGES = [
     "https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&w=100&q=80",
-    "https://images.unsplash.com/photo-1595475246624-39a5c22aa2d2?auto=format&fit=crop&w=100&q=80",
+    "https://images.unsplash.com/photo-1515377905703-c4788e51af15?auto=format&fit=crop&w=100&q=80",
     "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?auto=format&fit=crop&w=100&q=80"
 ];
 
